@@ -2,7 +2,9 @@
 pub enum TokenType {
     Principal,
     Imprimir,
+    Sair,
     IntLit,
+    StrLit,
     CurOpen,
     CurClose,
     ParenOpen,
@@ -75,6 +77,21 @@ impl Tokenizer {
                     buf.clear();
                     continue;
                 }
+
+                if buf == "sair" {
+                    tokens.push(Token {
+                        _type: TokenType::Sair,
+                        _value: None,
+                    });
+                    buf.clear();
+                    continue;
+                }
+                tokens.push(Token {
+                    _type: TokenType::StrLit,
+                    _value: Some(buf.clone()),
+                });
+                buf.clear();
+                continue;
             }
 
             if self.peek(0).unwrap().is_numeric() {

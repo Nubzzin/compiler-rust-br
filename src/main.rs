@@ -34,4 +34,6 @@ fn main() {
     println!("AST VVVVV");
     println!("{ast:#?}");
     // \DEBUG
+
+    println!("Sucesso!");
 }

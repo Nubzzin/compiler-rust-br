@@ -1,3 +1,4 @@
 principal() { 
     imprimir(100)
+    sair(0)
 }

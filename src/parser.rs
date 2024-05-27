@@ -4,11 +4,22 @@ use core::panic;
 #[derive(Debug)]
 pub enum Expr {
     Imprimir(NodeImprimir),
+    Sair(NodeSair),
+}
+
+#[derive(Debug)]
+pub struct NodeSairExpr {
+    value_expr: Token,
+}
+
+#[derive(Debug)]
+pub struct NodeSair {
+    value: NodeSairExpr,
 }
 
 #[derive(Debug)]
 pub struct NodeImprimirExpr {
-    value: Token,
+    value_expr: Token,
 }
 
 #[derive(Debug)]
@@ -93,7 +104,7 @@ impl Parser {
                     self.consume();
                     if self.peek(0).unwrap()._type == TokenType::IntLit {
                         let node_imprimir_expr = NodeImprimirExpr {
-                            value: self.peek(0).unwrap(),
+                            value_expr: self.peek(0).unwrap(),
                         };
                         node_imprimir = NodeImprimir {
                             value: node_imprimir_expr,
@@ -114,10 +125,46 @@ impl Parser {
                     value_expr: Expr::Imprimir(node_imprimir),
                 };
                 node_principal.values.push(node_principal_expr);
-            } else {
-                panic!("Argumeto incorreto dentro de \"principal\"");
+                continue;
             }
-
+            if self.peek(0).unwrap()._type == TokenType::Sair {
+                let node_sair: NodeSair;
+                self.consume();
+                if self.peek(0).unwrap()._type == TokenType::ParenOpen {
+                    self.consume();
+                    if self.peek(0).unwrap()._type == TokenType::IntLit {
+                        let node_sair_expr = NodeSairExpr {
+                            value_expr: self.peek(0).unwrap(),
+                        };
+                        node_sair = NodeSair {
+                            value: node_sair_expr,
+                        };
+                        self.consume();
+                    } else {
+                        panic!("Argumentos de \"sair\" inválidos!");
+                    }
+                } else {
+                    panic!("Falha ao abrir parenteses de \"sair\"");
+                }
+                if self.peek(0).unwrap()._type == TokenType::ParenClose {
+                    self.consume();
+                } else {
+                    panic!("Falha ao fechar parenteses de \"sair\"");
+                }
+                let node_principal_expr = NodePrincipalExpr {
+                    value_expr: Expr::Sair(node_sair),
+                };
+                node_principal.values.push(node_principal_expr);
+                continue;
+            }
+            if self.peek(0).unwrap()._type == TokenType::StrLit
+                || self.peek(0).unwrap()._type == TokenType::IntLit
+            {
+                panic!(
+                    "Argumento incorreto dentro de \"principal\" -> \"{}\" não reconhecido",
+                    self.peek(0).unwrap()._value.unwrap()
+                );
+            }
             self.consume();
         }
         node_principal
