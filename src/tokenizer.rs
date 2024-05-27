@@ -1,14 +1,19 @@
-#[derive(Debug)]
-enum TokenType {
-    Main,
-    Exit,
+#[derive(Debug, Clone, PartialEq)]
+pub enum TokenType {
+    Principal,
+    Imprimir,
     IntLit,
+    CurOpen,
+    CurClose,
+    ParenOpen,
+    ParenClose,
+    SemiCo,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Token {
-    _type: TokenType,
-    _value: Option<String>,
+    pub _type: TokenType,
+    pub _value: Option<String>,
 }
 
 pub struct Tokenizer {
@@ -17,8 +22,8 @@ pub struct Tokenizer {
 }
 
 impl Tokenizer {
-    pub fn new(src: String) -> Tokenizer {
-        Tokenizer { src, index: 0 }
+    pub fn new(src: String) -> Self {
+        Self { src, index: 0 }
     }
 
     fn peek(&self, offset: isize) -> Option<char> {
@@ -54,18 +59,18 @@ impl Tokenizer {
                     self.consume();
                 }
 
-                if buf == "main" {
+                if buf == "principal" {
                     tokens.push(Token {
-                        _type: TokenType::Main,
+                        _type: TokenType::Principal,
                         _value: None,
                     });
                     buf.clear();
                     continue;
                 }
 
-                if buf == "exit" {
+                if buf == "imprimir" {
                     tokens.push(Token {
-                        _type: TokenType::Exit,
+                        _type: TokenType::Imprimir,
                         _value: None,
                     });
                     buf.clear();
@@ -85,6 +90,51 @@ impl Tokenizer {
                     _value: Some(buf.clone()),
                 });
                 buf.clear();
+                continue;
+            }
+
+            if self.peek(0).unwrap() == '{' {
+                tokens.push(Token {
+                    _type: TokenType::CurOpen,
+                    _value: None,
+                });
+                buf.clear();
+                self.consume();
+                continue;
+            }
+            if self.peek(0).unwrap() == '}' {
+                tokens.push(Token {
+                    _type: TokenType::CurClose,
+                    _value: None,
+                });
+                buf.clear();
+                self.consume();
+                continue;
+            }
+            if self.peek(0).unwrap() == '(' {
+                tokens.push(Token {
+                    _type: TokenType::ParenOpen,
+                    _value: None,
+                })
+            }
+            if self.peek(0).unwrap() == ')' {
+                tokens.push(Token {
+                    _type: TokenType::ParenClose,
+                    _value: None,
+                })
+            }
+            if self.peek(0).unwrap() == ';' {
+                tokens.push(Token {
+                    _type: TokenType::SemiCo,
+                    _value: None,
+                });
+                buf.clear();
+                self.consume();
+                continue;
+            }
+            if self.peek(0).unwrap().is_whitespace() {
+                buf.clear();
+                self.consume();
                 continue;
             }
             self.consume();

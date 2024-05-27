@@ -1,6 +1,7 @@
 pub mod parser;
 pub mod tokenizer;
 
+use parser::Parser;
 use std::env;
 use std::fs;
 use tokenizer::Token;
@@ -21,5 +22,12 @@ fn main() {
     let mut tokenizer = Tokenizer::new(file);
     let tokens: Vec<Token> = tokenizer.tokenize();
 
-    println!("{:?}", tokens);
+    println!("TOKENS VVVVV");
+    println!("{tokens:#?}");
+
+    let mut parser = Parser::new(tokens);
+    let ast = parser.parser();
+
+    println!("AST VVVVV");
+    println!("{ast:#?}");
 }

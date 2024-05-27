@@ -1,1 +1,1 @@
-main exit
+principal() { imprimir(100);}
