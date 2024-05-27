@@ -22,12 +22,16 @@ fn main() {
     let mut tokenizer = Tokenizer::new(file);
     let tokens: Vec<Token> = tokenizer.tokenize();
 
+    // DEBUG
     println!("TOKENS VVVVV");
     println!("{tokens:#?}");
+    // \DEBUG
 
     let mut parser = Parser::new(tokens);
     let ast = parser.parser();
 
+    // DEBUG
     println!("AST VVVVV");
     println!("{ast:#?}");
+    // \DEBUG
 }

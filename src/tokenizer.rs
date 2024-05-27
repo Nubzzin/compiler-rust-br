@@ -7,7 +7,6 @@ pub enum TokenType {
     CurClose,
     ParenOpen,
     ParenClose,
-    SemiCo,
 }
 
 #[derive(Debug, Clone)]
@@ -122,15 +121,6 @@ impl Tokenizer {
                     _type: TokenType::ParenClose,
                     _value: None,
                 })
-            }
-            if self.peek(0).unwrap() == ';' {
-                tokens.push(Token {
-                    _type: TokenType::SemiCo,
-                    _value: None,
-                });
-                buf.clear();
-                self.consume();
-                continue;
             }
             if self.peek(0).unwrap().is_whitespace() {
                 buf.clear();

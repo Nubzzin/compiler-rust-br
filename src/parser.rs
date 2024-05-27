@@ -114,7 +114,10 @@ impl Parser {
                     value_expr: Expr::Imprimir(node_imprimir),
                 };
                 node_principal.values.push(node_principal_expr);
+            } else {
+                panic!("Argumeto incorreto dentro de \"principal\"");
             }
+
             self.consume();
         }
         node_principal
