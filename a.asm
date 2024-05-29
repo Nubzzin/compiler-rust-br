@@ -1,5 +1,5 @@
 section .data
-    text db "matheus", 10
+    text db "Matheus", 10
 
 section .text
     global _start

@@ -31,17 +31,10 @@ impl Construct {
         for value in iter.clone() {
             match &value._value_expr {
                 Expr::Imprimir(node_imprimir) => {
-                    if node_imprimir._value._value_expr._type == TokenType::IntLit {
-                        self.bufdata.push_str("    text db ");
-                        self.bufdata
-                            .push_str(node_imprimir._value._value_expr._value.as_ref().unwrap());
-                        self.bufdata.push_str(", 10\n");
-                    } else {
-                        self.bufdata.push_str("    text db \"");
-                        self.bufdata
-                            .push_str(node_imprimir._value._value_expr._value.as_ref().unwrap());
-                        self.bufdata.push_str("\", 10\n");
-                    }
+                    self.bufdata.push_str("    text db \"");
+                    self.bufdata
+                        .push_str(node_imprimir._value._value_expr._value.as_ref().unwrap());
+                    self.bufdata.push_str("\", 10\n");
 
                     self.bufbody.push_str("    mov rax, 1\n");
                     self.bufbody.push_str("    mov rdi, 1\n");
