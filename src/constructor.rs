@@ -1,5 +1,4 @@
-use crate::parser::{Expr, NodeImprimir, NodeImprimirExpr, NodePrincipal, NodeSair};
-use crate::tokenizer::{Token, TokenType};
+use crate::parser::{Expr, NodePrincipal};
 use std::fs::File;
 use std::io::prelude::*;
 
@@ -22,7 +21,8 @@ impl Construct {
 
     pub fn gen_asm(&mut self) {
         let mut file = File::create("a.asm").unwrap();
-        let mut iter = self.ast.values.iter();
+        let iter = self.ast.values.iter();
+        let mut counter = 0;
 
         self.bufdata.push_str("section .data\n");
         self.bufbody
@@ -31,15 +31,18 @@ impl Construct {
         for value in iter.clone() {
             match &value._value_expr {
                 Expr::Imprimir(node_imprimir) => {
-                    self.bufdata.push_str("    text db \"");
+                    self.bufdata.push_str("    text");
+                    self.bufdata.push_str(&counter.to_string());
+                    self.bufdata.push_str(" db \"");
                     self.bufdata
                         .push_str(node_imprimir._value._value_expr._value.as_ref().unwrap());
                     self.bufdata.push_str("\", 10\n");
 
                     self.bufbody.push_str("    mov rax, 1\n");
                     self.bufbody.push_str("    mov rdi, 1\n");
-                    self.bufbody.push_str("    mov rsi, text\n");
-                    self.bufbody.push_str("    mov rdx, ");
+                    self.bufbody.push_str("    mov rsi, text");
+                    self.bufbody.push_str(&counter.to_string());
+                    self.bufbody.push_str("\n    mov rdx, ");
                     let size = &node_imprimir
                         ._value
                         ._value_expr
@@ -50,6 +53,7 @@ impl Construct {
                         + 1;
                     self.bufbody.push_str(size.to_string().as_ref());
                     self.bufbody.push_str("\n    syscall\n");
+                    counter += 1;
                 }
                 Expr::Sair(node_sair) => {
                     self.bufbody.push_str("    mov rax, 60\n");
@@ -61,8 +65,8 @@ impl Construct {
             }
         }
 
-        file.write_all(&self.bufdata.as_bytes());
-        file.write_all("\n".as_bytes());
-        file.write_all(&self.bufbody.as_bytes());
+        let _ = file.write_all(&self.bufdata.as_bytes());
+        let _ = file.write_all("\n".as_bytes());
+        let _ = file.write_all(&self.bufbody.as_bytes());
     }
 }
