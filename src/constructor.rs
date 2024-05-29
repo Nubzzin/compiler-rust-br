@@ -47,16 +47,15 @@ impl Construct {
                     self.bufbody.push_str("    mov rdi, 1\n");
                     self.bufbody.push_str("    mov rsi, text\n");
                     self.bufbody.push_str("    mov rdx, ");
-                    self.bufbody.push_str(
-                        &node_imprimir
-                            ._value
-                            ._value_expr
-                            ._value
-                            .as_ref()
-                            .unwrap()
-                            .len()
-                            .to_string(),
-                    );
+                    let size = &node_imprimir
+                        ._value
+                        ._value_expr
+                        ._value
+                        .as_ref()
+                        .unwrap()
+                        .len()
+                        + 1;
+                    self.bufbody.push_str(size.to_string().as_ref());
                     self.bufbody.push_str("\n    syscall\n");
                 }
                 Expr::Sair(node_sair) => {

@@ -7,7 +7,7 @@ _start:
     mov rax, 1
     mov rdi, 1
     mov rsi, text
-    mov rdx, 7
+    mov rdx, 8
     syscall
     mov rax, 60
     mov rdi, 69
