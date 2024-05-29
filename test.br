@@ -1,4 +1,6 @@
 principal() { 
+    imprimir("Olá")
     imprimir("Matheus")
+    imprimir("Como você vai")
     sair(69)
 }

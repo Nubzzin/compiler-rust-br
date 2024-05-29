@@ -31,16 +31,20 @@ fn main() {
     let tokens: Vec<Token> = tokenizer.tokenize();
 
     // DEBUG
+
     // println!("TOKENS VVVVV");
     // println!("{tokens:#?}");
+
     // \DEBUG
 
     let mut parser = Parser::new(tokens);
     let ast = parser.parser();
 
     // DEBUG
+
     // println!("AST VVVVV");
     // println!("{ast:#?}");
+
     // \DEBUG
 
     let mut constructor = Construct::new(ast);
@@ -65,7 +69,7 @@ fn main() {
         panic!("Falha ao executar ld");
     }
     let _rm_ld = process::Command::new("rm").arg("a.o").output();
-    // let _rm_asm = process::Command::new("rm").arg("a.asm").output(); // Debug
+    // let _rm_asm = process::Command::new("rm").arg("a.asm").output(); // Verificar o assembly
 
     println!("Sucesso!");
 }

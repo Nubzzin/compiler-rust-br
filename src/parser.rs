@@ -19,7 +19,8 @@ pub struct NodeSair {
 
 #[derive(Debug, PartialEq)]
 pub struct NodeImprimirExpr {
-    pub _value_expr: Token,
+    pub _values_exprs: Vec<Token>,
+    pub _buffer: String,
 }
 
 #[derive(Debug, PartialEq)]
@@ -104,7 +105,8 @@ impl Parser {
                     self.consume();
                     if self.peek(0).unwrap()._type == TokenType::IntLit {
                         let node_imprimir_expr = NodeImprimirExpr {
-                            _value_expr: self.peek(0).unwrap(),
+                            _values_exprs: vec![self.peek(0).unwrap()],
+                            _buffer: self.peek(0).unwrap()._value.unwrap(),
                         };
                         node_imprimir = NodeImprimir {
                             _value: node_imprimir_expr,
@@ -112,19 +114,26 @@ impl Parser {
                         self.consume();
                     } else if self.peek(0).unwrap()._type == TokenType::Aspas {
                         self.consume();
-                        if self.peek(0).unwrap()._type == TokenType::StrLit {
-                            let node_imprimir_expr = NodeImprimirExpr {
-                                _value_expr: self.peek(0).unwrap(),
-                            };
-                            node_imprimir = NodeImprimir {
-                                _value: node_imprimir_expr,
-                            };
+                        let mut node_imprimir_expr = NodeImprimirExpr {
+                            _values_exprs: vec![],
+                            _buffer: String::new(),
+                        };
+                        while self.peek(0).unwrap()._type == TokenType::StrLit {
+                            node_imprimir_expr
+                                ._values_exprs
+                                .push(self.peek(0).unwrap().clone());
                             self.consume();
-                        } else {
-                            panic!("Argumentos de \"imprimir\" inválidos!");
                         }
+                        for token in &node_imprimir_expr._values_exprs {
+                            let string = token._value.clone();
+                            node_imprimir_expr._buffer.push_str(&string.unwrap());
+                            node_imprimir_expr._buffer.push_str(" ");
+                        }
+                        node_imprimir = NodeImprimir {
+                            _value: node_imprimir_expr,
+                        };
                         if self.peek(0).unwrap()._type != TokenType::Aspas {
-                            panic!("Argumentos de \"imprimir\" inválidos!");
+                            panic!("Declaracao de string incorreta!");
                         }
                         self.consume();
                     } else {

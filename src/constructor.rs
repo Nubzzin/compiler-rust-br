@@ -34,8 +34,7 @@ impl Construct {
                     self.bufdata.push_str("    text");
                     self.bufdata.push_str(&counter.to_string());
                     self.bufdata.push_str(" db \"");
-                    self.bufdata
-                        .push_str(node_imprimir._value._value_expr._value.as_ref().unwrap());
+                    self.bufdata.push_str(&node_imprimir._value._buffer);
                     self.bufdata.push_str("\", 10\n");
 
                     self.bufbody.push_str("    mov rax, 1\n");
@@ -43,14 +42,7 @@ impl Construct {
                     self.bufbody.push_str("    mov rsi, text");
                     self.bufbody.push_str(&counter.to_string());
                     self.bufbody.push_str("\n    mov rdx, ");
-                    let size = &node_imprimir
-                        ._value
-                        ._value_expr
-                        ._value
-                        .as_ref()
-                        .unwrap()
-                        .len()
-                        + 1;
+                    let size = &node_imprimir._value._buffer.len() + 1;
                     self.bufbody.push_str(size.to_string().as_ref());
                     self.bufbody.push_str("\n    syscall\n");
                     counter += 1;
