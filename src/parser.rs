@@ -1,40 +1,40 @@
 use crate::tokenizer::{Token, TokenType};
 use core::panic;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Expr {
     Imprimir(NodeImprimir),
     Sair(NodeSair),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct NodeSairExpr {
-    value_expr: Token,
+    pub _value_expr: Token,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct NodeSair {
-    value: NodeSairExpr,
+    pub _value: NodeSairExpr,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct NodeImprimirExpr {
-    value_expr: Token,
+    pub _value_expr: Token,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct NodeImprimir {
-    value: NodeImprimirExpr,
+    pub _value: NodeImprimirExpr,
 }
 
 #[derive(Debug)]
 pub struct NodePrincipalExpr {
-    value_expr: Expr,
+    pub _value_expr: Expr,
 }
 
 #[derive(Debug)]
 pub struct NodePrincipal {
-    values: Vec<NodePrincipalExpr>,
+    pub values: Vec<NodePrincipalExpr>,
 }
 
 #[derive(Debug)]
@@ -104,11 +104,28 @@ impl Parser {
                     self.consume();
                     if self.peek(0).unwrap()._type == TokenType::IntLit {
                         let node_imprimir_expr = NodeImprimirExpr {
-                            value_expr: self.peek(0).unwrap(),
+                            _value_expr: self.peek(0).unwrap(),
                         };
                         node_imprimir = NodeImprimir {
-                            value: node_imprimir_expr,
+                            _value: node_imprimir_expr,
                         };
+                        self.consume();
+                    } else if self.peek(0).unwrap()._type == TokenType::Aspas {
+                        self.consume();
+                        if self.peek(0).unwrap()._type == TokenType::StrLit {
+                            let node_imprimir_expr = NodeImprimirExpr {
+                                _value_expr: self.peek(0).unwrap(),
+                            };
+                            node_imprimir = NodeImprimir {
+                                _value: node_imprimir_expr,
+                            };
+                            self.consume();
+                        } else {
+                            panic!("Argumentos de \"imprimir\" inválidos!");
+                        }
+                        if self.peek(0).unwrap()._type != TokenType::Aspas {
+                            panic!("Argumentos de \"imprimir\" inválidos!");
+                        }
                         self.consume();
                     } else {
                         panic!("Argumentos de \"imprimir\" inválidos!");
@@ -122,7 +139,7 @@ impl Parser {
                     panic!("Falha ao fechar parenteses de \"imprimir\"");
                 }
                 let node_principal_expr = NodePrincipalExpr {
-                    value_expr: Expr::Imprimir(node_imprimir),
+                    _value_expr: Expr::Imprimir(node_imprimir),
                 };
                 node_principal.values.push(node_principal_expr);
                 continue;
@@ -134,10 +151,10 @@ impl Parser {
                     self.consume();
                     if self.peek(0).unwrap()._type == TokenType::IntLit {
                         let node_sair_expr = NodeSairExpr {
-                            value_expr: self.peek(0).unwrap(),
+                            _value_expr: self.peek(0).unwrap(),
                         };
                         node_sair = NodeSair {
-                            value: node_sair_expr,
+                            _value: node_sair_expr,
                         };
                         self.consume();
                     } else {
@@ -152,7 +169,7 @@ impl Parser {
                     panic!("Falha ao fechar parenteses de \"sair\"");
                 }
                 let node_principal_expr = NodePrincipalExpr {
-                    value_expr: Expr::Sair(node_sair),
+                    _value_expr: Expr::Sair(node_sair),
                 };
                 node_principal.values.push(node_principal_expr);
                 continue;

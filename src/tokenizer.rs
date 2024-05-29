@@ -9,9 +9,10 @@ pub enum TokenType {
     CurClose,
     ParenOpen,
     ParenClose,
+    Aspas,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Token {
     pub _type: TokenType,
     pub _value: Option<String>,
@@ -136,6 +137,12 @@ impl Tokenizer {
             if self.peek(0).unwrap() == ')' {
                 tokens.push(Token {
                     _type: TokenType::ParenClose,
+                    _value: None,
+                })
+            }
+            if self.peek(0).unwrap() == '"' {
+                tokens.push(Token {
+                    _type: TokenType::Aspas,
                     _value: None,
                 })
             }
