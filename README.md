@@ -1,7 +1,7 @@
 # Compilador em rust | Compiler in rust
-Compilador feito em _rust_ e linguagem intermediaria _assembly_ \
-Compilador com syntax em português \
+Compiler made in _rust_ and intermediate language _assembly_ \
+Compiler with syntax in Portuguese
 
-Implementa as funções de:
+Implements the functions of:
 - _imprimir_
-- _sair_ 
+- _sair_
